@@ -7,7 +7,9 @@ import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
 
+@WebServlet("/calc")
 public class CalculatorServlet extends GenericServlet{
 
     @Override
@@ -19,7 +21,7 @@ public class CalculatorServlet extends GenericServlet{
         response.setCharacterEncoding("UTF-8");
         
         PrintWriter writer = response.getWriter();
-        writer.println("a=" + a + "," +"b="+b +"의 계싼결과입니다.");
+        writer.println("a=" + a + "," +"b="+b +"의 계산결과입니다.");
         writer.println("a+b= "+ (a+b));
         writer.println("a-b="+(a-b));
         writer.println("a*b=" +(a*b));
