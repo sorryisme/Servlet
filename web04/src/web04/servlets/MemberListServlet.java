@@ -39,6 +39,7 @@ public class MemberListServlet extends GenericServlet{
             out.println("<!DOCTYPE HTML>");
             out.println("<html><head><title>회원목록</title></head>");
             out.println("<body><h1>회원목록</h1>");
+            out.println("<p><a href='add'>신규회원</a></p>");
             while(rs.next()) {
                             out.println(rs.getInt("mno") + " , " + 
                                     rs.getString("mname") + " , " + 
