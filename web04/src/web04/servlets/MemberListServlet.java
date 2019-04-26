@@ -2,7 +2,6 @@ package web04.servlets;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 
+import web04.dao.MemberDao;
 import web04.vo.Member;
 
 
@@ -30,34 +30,26 @@ public class MemberListServlet extends GenericServlet{
         
         try {
             ServletContext sc = this.getServletContext();
-            Class.forName(sc.getInitParameter("driver"));
-            // conn = DriverManager.getConnection(sc.getInitParameter("url"), sc.getInitParameter("username"), sc.getInitParameter("password"));
-            
-            // app init Servlet에서 처리한 Conn을 사용하자
             // app init Servlet에서 setAttribute로 처리했으니 getAttribute로 처리
             conn = (Connection)sc.getAttribute("conn");
             
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("select mno, mname,email, cre_date from members order by mno asc");
+            MemberDao memberDao = new MemberDao();
+            memberDao.setConnection(conn);
+            
+            request.setAttribute("members", memberDao.selectList());
             response.setContentType("text/html; charset=UTF-8");
-            ArrayList<Member> members = new ArrayList<Member>();
-            while(rs.next()) {
-                members.add(new Member().setNo(rs.getInt("mno")).setName(rs.getString("mname")).setEmail(rs.getString("email")).setCreateDate(rs.getDate("cre_date")));
-            }
-            request.setAttribute("members", members);
-            RequestDispatcher rd = request.getRequestDispatcher("/Header.jsp");
-            rd.include(request, response);
+
+            
            
-            rd = request.getRequestDispatcher("/member/MemberList.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/member/MemberList.jsp");
             rd.include(request, response);
             
-            rd = request.getRequestDispatcher("/Tail.jsp");
-            rd.include(request, response);
             
             //jsp 페이지에서 <jsp:include page="/Tail.jsp"/>와 동일
             
             
         } catch (Exception e) {
+            e.printStackTrace();
             request.setAttribute("error", e);
             RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
             rd.forward(request, response);
