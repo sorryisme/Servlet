@@ -1,5 +1,6 @@
 package web04.servlets;
 
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,8 +19,8 @@ import javax.servlet.annotation.WebServlet;
 import web04.vo.Member;
 
 
-@WebServlet("/member/list")
-public class MemberListServlet extends GenericServlet{
+/*@WebServlet("/member/list")
+*/public class MemberListServlet1 extends GenericServlet{
 
     @Override
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
@@ -40,22 +41,12 @@ public class MemberListServlet extends GenericServlet{
                 members.add(new Member().setNo(rs.getInt("mno")).setName(rs.getString("mname")).setEmail(rs.getString("email")).setCreateDate(rs.getDate("cre_date")));
             }
             request.setAttribute("members", members);
-            RequestDispatcher rd = request.getRequestDispatcher("/Header.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/member/MemberList.jsp");
             rd.include(request, response);
-           
-            rd = request.getRequestDispatcher("/member/MemberList.jsp");
-            rd.include(request, response);
-            
-            rd = request.getRequestDispatcher("/Tail.jsp");
-            rd.include(request, response);
-            
-            //jsp 페이지에서 <jsp:include page="/Tail.jsp"/>와 동일
             
             
         } catch (Exception e) {
-            request.setAttribute("error", e);
-            RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
-            rd.forward(request, response);
+          throw new ServletException(e);
         } finally {
             try { if(rs != null ) rs.close();} catch (Exception e) {}
             try { if(stmt != null) stmt.close();} catch (Exception e) {}

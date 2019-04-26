@@ -48,7 +48,9 @@ public class MemberAddServlet extends HttpServlet{
             stmt.setString(2, request.getParameter("password"));
             stmt.setString(3, request.getParameter("name"));
             stmt.executeUpdate();
-
+            response.sendRedirect("list");
+            /*redirect는 html을 출력하지 않는다 
+            
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
             out.println("<html><head><title>회원등록결과</title>");
@@ -57,7 +59,7 @@ public class MemberAddServlet extends HttpServlet{
             out.println("<body>");
             out.println("<p>등록 성공입니다.</p>");
             out.println("</body></html>");
-            
+            */
             //response.addHeader("Refresh", "1;url=list");
 
         } catch (Exception e) {
