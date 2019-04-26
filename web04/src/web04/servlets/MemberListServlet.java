@@ -31,7 +31,12 @@ public class MemberListServlet extends GenericServlet{
         try {
             ServletContext sc = this.getServletContext();
             Class.forName(sc.getInitParameter("driver"));
-            conn = DriverManager.getConnection(sc.getInitParameter("url"), sc.getInitParameter("username"), sc.getInitParameter("password"));
+            // conn = DriverManager.getConnection(sc.getInitParameter("url"), sc.getInitParameter("username"), sc.getInitParameter("password"));
+            
+            // app init Servlet에서 처리한 Conn을 사용하자
+            // app init Servlet에서 setAttribute로 처리했으니 getAttribute로 처리
+            conn = (Connection)sc.getAttribute("conn");
+            
             stmt = conn.createStatement();
             rs = stmt.executeQuery("select mno, mname,email, cre_date from members order by mno asc");
             response.setContentType("text/html; charset=UTF-8");
@@ -59,7 +64,6 @@ public class MemberListServlet extends GenericServlet{
         } finally {
             try { if(rs != null ) rs.close();} catch (Exception e) {}
             try { if(stmt != null) stmt.close();} catch (Exception e) {}
-            try { if(conn != null) conn.close(); } catch (Exception e) {}
         }
     }
 }

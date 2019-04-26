@@ -1,13 +1,13 @@
 package web04.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -15,6 +15,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import web04.vo.Member;
 
 @WebServlet( 
             urlPatterns = {"/member/update"},
@@ -30,31 +32,25 @@ public class MemberUpdateServlet extends HttpServlet{
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
+        response.setContentType("text/html; charset=UTF-8");
         try {
-            Class.forName(this.getInitParameter("driver"));
-            conn = DriverManager.getConnection(this.getInitParameter("url"), this.getInitParameter("username"), this.getInitParameter("password"));
+            ServletContext sc  = this.getServletContext();
+            conn = (Connection)sc.getAttribute("conn");
+            
             stmt = conn.createStatement();
             rs = stmt.executeQuery("select mno,email,mname,cre_date from members"
                     + " where mno =" + request.getParameter("no"));
-            rs.next();
-            response.setContentType("text/html; charset=UTF-8");
-            PrintWriter out = response.getWriter();
-            out.println("<html><head><title>회원정보</title></head>");
-            out.println("<body><h1>회원정보</h1>");
-            out.println("<form action='update' method='post'>");
-            out.println("번호 <input type='text' name='no' value='"+ request.getParameter("no") + "' readonly><br>");
-            out.println("이름 : * <input type='text' name='name' value='" +rs.getString("mname") + "'><br>");
-            out.println("이메일 : <input type='text' name='email' value='"+rs.getString("email")+"'><br>");
-            out.println("<input type='submit' value='저장'>");
-            out.println("<intput type='button' value='취소' onclick='location.href=\"list\"'>");
-            out.println("</form>");
-            out.println("</body></html>");
+            System.out.println(rs.next());
+            request.setAttribute("member", new Member().setNo(rs.getInt("mno")).setName(rs.getString("mname")).setEmail(rs.getString("email")));
+            RequestDispatcher rd = request.getRequestDispatcher("MemberUpdate.jsp");
+            rd.include(request, response);
+            
+            
         } catch (Exception e) {
             throw new ServletException(e);
         } finally {
             try{ if (rs != null) rs.close();} catch (Exception e) {}
-            try { if (stmt != null) rs.close();} catch (Exception e) {}
-            try { if(conn != null ) conn.close();} catch (Exception e) {}
+            try { if (stmt != null) stmt.close();} catch (Exception e) {}
         }
     }
 
@@ -66,9 +62,7 @@ public class MemberUpdateServlet extends HttpServlet{
         try {
             
             ServletContext sc = this.getServletContext();
-            
-            Class.forName(sc.getInitParameter("driver"));
-            conn = DriverManager.getConnection(sc.getInitParameter("url"), sc.getInitParameter("username"), sc.getInitParameter("password"));
+            conn = (Connection)sc.getAttribute("conn");
             stmt = conn.prepareStatement("update members set email=?, mname=?,mod_date=now() where mno=?");
             stmt.setString(1, request.getParameter("email"));
             stmt.setString(2, request.getParameter("name"));
@@ -80,7 +74,6 @@ public class MemberUpdateServlet extends HttpServlet{
             throw new ServletException (e);
         } finally {
             try { if(stmt != null)stmt.close();} catch (Exception e) {}
-            try { if(conn != null)conn.close();} catch (Exception e) {}
         }
     }
     
