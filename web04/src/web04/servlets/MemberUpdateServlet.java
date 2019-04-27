@@ -30,13 +30,10 @@ public class MemberUpdateServlet extends HttpServlet{
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Connection conn = null;
         response.setContentType("text/html; charset=UTF-8");
         try {
             ServletContext sc  = this.getServletContext();
-            conn = (Connection)sc.getAttribute("conn");
-            MemberDao memberDao = new MemberDao();
-            memberDao.setConnection(conn);
+            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
             
             request.setAttribute("member", memberDao.selectOne(Integer.parseInt(request.getParameter("no"))));
             RequestDispatcher rd = request.getRequestDispatcher("MemberUpdate.jsp");
@@ -49,13 +46,10 @@ public class MemberUpdateServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        Connection conn = null;
         try {
             
             ServletContext sc = this.getServletContext();
-            conn = (Connection)sc.getAttribute("conn");
-            MemberDao memberDao = new MemberDao();
-            memberDao.setConnection(conn);
+            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
             
             Member member = new Member().setEmail(request.getParameter("email")).setName(request.getParameter("name")).setNo(Integer.parseInt(request.getParameter("no")));
             memberDao.updateMember(member);

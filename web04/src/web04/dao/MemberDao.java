@@ -7,19 +7,24 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import web04.vo.Member;
 
 public class MemberDao {
-    Connection connection;
-
-    public void setConnection(Connection connection) {
-        this.connection = connection;
+    
+    DataSource ds;
+    
+    public void setDataSource(DataSource ds) {
+        this.ds = ds;
     }
 
     public List<Member> selectList() throws Exception{
+        Connection connection = null;
         Statement stmt = null;
         ResultSet rs = null;
         try {
+            connection = ds.getConnection();
             stmt = connection.createStatement();
             rs = stmt.executeQuery("select mno,mname,email,cre_date from members order by mno asc");
             ArrayList<Member> members = new ArrayList<Member>();
@@ -33,13 +38,16 @@ public class MemberDao {
         } finally {
             try { if(rs != null) rs.close();} catch(Exception e) {}
             try { if(stmt != null) stmt.close();} catch (Exception e) {}
+            try { if(connection != null) connection.close();} catch (Exception e) {}
         }
     }
 
     public int insert(Member member) throws Exception{
+        Connection connection = null;
         PreparedStatement stmt = null;
         try{
-            stmt = this.connection.prepareStatement("insert into members(email,pwd,mname,cre_date,mod_date) values(?,?,?,now(),now())");
+            connection = ds.getConnection();
+            stmt = connection.prepareStatement("insert into members(email,pwd,mname,cre_date,mod_date) values(?,?,?,now(),now())");
             stmt.setString(1, member.getEmail());
             stmt.setString(2, member.getPassword());
             stmt.setString(3, member.getName());
@@ -49,14 +57,17 @@ public class MemberDao {
             throw e;
         } finally {
             try { if(stmt != null) stmt.close();} catch (Exception e) {}
+            try { if(connection != null) connection.close();} catch (Exception e) {}
         }
 
     }
 
     public int delete(int no) throws Exception{
+        Connection connection = null;
         PreparedStatement stmt = null;
         try {
-            stmt =this.connection.prepareStatement("delete from members where mno = ?");
+            connection = ds.getConnection();
+            stmt =connection.prepareStatement("delete from members where mno = ?");
             stmt.setInt(1, no);
             int result = stmt.executeUpdate();
             return result;
@@ -64,16 +75,18 @@ public class MemberDao {
             throw e;
         } finally {
             try{ if(stmt != null ) stmt.close();} catch (Exception e) {}
+            try { if(connection != null) connection.close();} catch (Exception e) {}
         }
     }
 
     public Member selectOne(int no) throws Exception{
+        Connection connection = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Member member = null;
         try {
-
-            stmt = this.connection.prepareStatement("select mno,email,mname,cre_date from members where mno = ?");
+            connection = ds.getConnection();
+            stmt = connection.prepareStatement("select mno,email,mname,cre_date from members where mno = ?");
             stmt.setInt(1, no);
             rs = stmt.executeQuery();
 
@@ -88,14 +101,18 @@ public class MemberDao {
         } finally {
             try { if(rs != null) rs.close(); } catch (Exception e) {}
             try { if(stmt != null) stmt.close(); } catch (Exception e) {}
+            try { if(connection != null) connection.close();} catch (Exception e) {}
         }
 
     }
 
     public int updateMember(Member member) throws Exception{
+        
+        Connection connection = null;
         PreparedStatement stmt = null;
         try {
-            stmt = this.connection.prepareStatement("update members set email=?, mname=?,mod_date=now() where mno=?");
+            connection = ds.getConnection();
+            stmt = connection.prepareStatement("update members set email=?, mname=?,mod_date=now() where mno=?");
             stmt.setString(1, member.getEmail());
             stmt.setString(2, member.getName());
             stmt.setInt(3, member.getNo());
@@ -105,14 +122,16 @@ public class MemberDao {
             throw e;
         } finally {
             try { if(stmt!=null) stmt.close(); } catch(Exception e) {}
-        }
+            try { if(connection != null) connection.close();} catch (Exception e) {}        }
     }
     public Member exist(String email, String password) throws Exception{
+        Connection connection = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Member member = null;
         try { 
-            stmt = this.connection.prepareStatement("select mname,email from members where email=? and pwd=?");
+            connection = ds.getConnection();
+            stmt = connection.prepareStatement("select mname,email from members where email=? and pwd=?");
             stmt.setString(1, email);
             stmt.setString(2, password);
             rs = stmt.executeQuery();
@@ -126,6 +145,7 @@ public class MemberDao {
             throw e;
         } finally {
             try { if(rs !=null)  rs.close();} catch (Exception e) {}
+            try { if(connection != null) connection.close();} catch (Exception e) {}
         }
     }
 }

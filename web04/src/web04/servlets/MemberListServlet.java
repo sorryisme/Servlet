@@ -30,11 +30,7 @@ public class MemberListServlet extends GenericServlet{
         
         try {
             ServletContext sc = this.getServletContext();
-            // app init Servlet에서 setAttribute로 처리했으니 getAttribute로 처리
-            conn = (Connection)sc.getAttribute("conn");
-            
-            MemberDao memberDao = new MemberDao();
-            memberDao.setConnection(conn);
+            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
             
             request.setAttribute("members", memberDao.selectList());
             response.setContentType("text/html; charset=UTF-8");
