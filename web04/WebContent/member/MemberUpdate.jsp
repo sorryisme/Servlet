@@ -10,13 +10,13 @@
 </head>
 <body>
 <h1>회원정보</h1>
-<form action='update' method='post'>
+<form action='update.do' method='post'>
 번호 <input type='text' name='no' value='${member.no}' readonly><br>         
 이름 : * <input type='text' name='name' value='${member.name }'><br>
 이메일 : <input type='text' name='email' value='${member.email }'><br>
 가입일 : ${member.createDate}<br>
 <input type='submit' value='저장'>
-<intput type='button' value='취소' onclick='location.href="list"'>
+<intput type='button' value='취소' onclick='location.href="list.do"'>
 </form>
 
 </body>

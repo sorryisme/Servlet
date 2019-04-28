@@ -8,7 +8,7 @@
 <%if(member.getEmail() != null){  %>
 <span style="float:right;">
     <%=member.getName() %>
-    <a style="color:white;" href="<%=request.getContextPath() %>/auth/logout">·Î±×¾Æ¿ô
+    <a style="color:white;" href="<%=request.getContextPath() %>/auth/logout.do">·Î±×¾Æ¿ô
     </a>
 </span>
 <% } %>

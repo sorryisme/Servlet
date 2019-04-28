@@ -35,10 +35,9 @@ public class LogInServlet extends HttpServlet{
             if(member != null ) {
             HttpSession session = request.getSession();
             session.setAttribute("member", member);
-            response.sendRedirect("../member/list");
+            request.setAttribute("viewUrl", "redirect:../member/list.do");
             } else {
-                RequestDispatcher rd = request.getRequestDispatcher("/auth/LoginFail.jsp");
-                rd.forward(request, response);
+                request.setAttribute("viewUrl", "/auth/LoginFail.jsp");
             }
         } catch (Exception e) {
             throw new ServletException(e);

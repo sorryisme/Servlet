@@ -24,7 +24,6 @@ public class MemberListServlet extends GenericServlet{
     @Override
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
         
-        Connection conn= null;
         Statement stmt = null;
         ResultSet rs = null;
         
@@ -34,21 +33,11 @@ public class MemberListServlet extends GenericServlet{
             
             request.setAttribute("members", memberDao.selectList());
             response.setContentType("text/html; charset=UTF-8");
-
-            
-           
-            RequestDispatcher rd = request.getRequestDispatcher("/member/MemberList.jsp");
-            rd.include(request, response);
-            
-            
-            //jsp 페이지에서 <jsp:include page="/Tail.jsp"/>와 동일
+            request.setAttribute("viewUrl", "/member/MemberList.jsp");
             
             
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", e);
-            RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
-            rd.forward(request, response);
+            throw new ServletException(e);
         } finally {
             try { if(rs != null ) rs.close();} catch (Exception e) {}
             try { if(stmt != null) stmt.close();} catch (Exception e) {}

@@ -1,13 +1,7 @@
 package web04.servlets;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -36,8 +30,7 @@ public class MemberUpdateServlet extends HttpServlet{
             MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
             
             request.setAttribute("member", memberDao.selectOne(Integer.parseInt(request.getParameter("no"))));
-            RequestDispatcher rd = request.getRequestDispatcher("MemberUpdate.jsp");
-            rd.include(request, response);
+            request.setAttribute("viewUrl", "MemberUpdate.jsp");
         } catch (Exception e) {
             throw new ServletException(e);
         }
@@ -51,11 +44,11 @@ public class MemberUpdateServlet extends HttpServlet{
             ServletContext sc = this.getServletContext();
             MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
             
-            Member member = new Member().setEmail(request.getParameter("email")).setName(request.getParameter("name")).setNo(Integer.parseInt(request.getParameter("no")));
-            memberDao.updateMember(member);
-            
-            response.sendRedirect("list");
-            
+            Member member1  =(Member)request.getAttribute("member");
+            System.out.println(member1.getEmail());
+            System.out.println(member1.getName());
+            memberDao.updateMember((Member)request.getAttribute("member"));
+            request.setAttribute("viewUrl", "redirect:list.do");
         } catch (Exception e) {
             throw new ServletException (e);
         }

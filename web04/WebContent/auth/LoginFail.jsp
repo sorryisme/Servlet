@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="EUC-KR">
-<meta http-equiv="Refresh" content="1;url=login">
+<meta http-equiv="Refresh" content="1;url=login.do">
 <title>Insert title here</title>
 </head>
 <body>
