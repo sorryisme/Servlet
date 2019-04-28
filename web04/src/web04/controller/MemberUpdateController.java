@@ -2,23 +2,33 @@ package web04.controller;
 
 import java.util.Map;
 
-import web04.dao.MemberDao;
+import web04.bind.DataBinding;
+import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
-public class MemberUpdateController implements Controller{
+public class MemberUpdateController implements Controller,DataBinding{
+    MySqlMemberDao memberDao;
+    
+    public MemberUpdateController setMemberDao(MySqlMemberDao memberDao) {
+        this.memberDao = memberDao;
+        return this;
+    }
+    @Override
+    public Object[] getDataBinders() {
+        return new Object[] {"no",Integer.class,"member",web04.vo.Member.class};
+    }
+
+
 
     @Override
     public String execute(Map<String, Object> model) throws Exception {
         
-        MemberDao memberDao = null;
         if(model.get("member") == null) {
-            memberDao =(MemberDao)model.get("memberDao");
             model.put("member", memberDao.selectOne((int)model.get("no")));
             
             return "MemberUpdate.jsp";
         } else {
             
-            memberDao = (MemberDao)model.get("memberDao");
             Member member =(Member)model.get("member");
             memberDao.updateMember(member);
             

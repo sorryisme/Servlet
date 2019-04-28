@@ -11,14 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import web04.bind.DataBinding;
+import web04.bind.ServletRequestDataBinder;
 import web04.controller.Controller;
-import web04.controller.MemberAddController;
-import web04.controller.MemberDeleteController;
-import web04.controller.MemberListController;
-import web04.controller.MemberLoginController;
-import web04.controller.MemberLogoutController;
-import web04.controller.MemberUpdateController;
-import web04.vo.Member;
 
 @WebServlet("*.do")
 public class DispatcherServlet extends HttpServlet{
@@ -27,49 +22,22 @@ public class DispatcherServlet extends HttpServlet{
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
         String servletPath = request.getServletPath();
-        
+
         try {
             ServletContext sc = this.getServletContext();
             HashMap<String, Object> model = new HashMap<>();
-            model.put("memberDao", sc.getAttribute("memberDao"));
-            String pageControllerPath = null;
-            Controller pageController = null;
-            if("/member/list.do".equals(servletPath)) {
-                pageController = new MemberListController();
-            } else if ("/member/add.do".equals(servletPath)) {
-                pageController = new MemberAddController();
-                if(request.getParameter("email") != null) {
-                    model.put("member", new Member().setEmail(request.getParameter("email")).setName(request.getParameter("name")).setPassword(request.getParameter("password")));
-                }
-            } else if("/member/update.do".equals(servletPath)) {
-                pageController = new MemberUpdateController();
-                if(request.getParameter("email") != null) {
-                    model.put("member", new Member().setNo(Integer.parseInt(request.getParameter("no"))).setEmail(request.getParameter("email")).setName(request.getParameter("name")));
-                } else {
-                    model.put("no",Integer.parseInt(request.getParameter("no")));
-                }
+            model.put("session",request.getSession());
+            Controller pageController = (Controller)sc.getAttribute(servletPath);
 
-            } else if("/member/delete.do".equals(servletPath)) {
-                pageController = new MemberDeleteController();
-                model.put("no",Integer.parseInt(request.getParameter("no")));
-            } else if("/auth/login.do".equals(servletPath)) {
-                pageController =new MemberLoginController();
-               
-                if(request.getParameter("email") != null) {
-                    model.put("email",request.getParameter("email"));
-                    model.put("password",request.getParameter("password"));
-                    model.put("session", request.getSession());
-                }
-                
-            } else if("/auth/logout.do".equals(servletPath)) {
-                pageController =new MemberLogoutController();
-                model.put("session",request.getSession());
+            if(pageController instanceof DataBinding) {
+                prepareRequestData(request,model,(DataBinding)pageController);
             }
+            
 
-           
+
 
             // 요청 페이지로 작업을 완료 한후 request 저장소에 viewUrl이 저장된다.
-            
+
             String viewURL = pageController.execute(model);
             for (String key : model.keySet()) {
                 request.setAttribute(key, model.get(key));
@@ -88,5 +56,20 @@ public class DispatcherServlet extends HttpServlet{
             rd.forward(request, response);
         }
 
+    }
+
+    private void prepareRequestData(HttpServletRequest request, HashMap<String, Object> model,
+            DataBinding dataBinding) throws Exception{
+        Object[] dataBinders = dataBinding.getDataBinders();
+        String dataName = null;
+        Class<?> dataType = null;
+        Object dataObj =null;
+        for (int i=0; i< dataBinders.length; i+=2) {
+            dataName = (String)dataBinders[i];
+            dataType = (Class<?>)dataBinders[i+1];
+            dataObj = ServletRequestDataBinder.bind(request,dataType, dataName);
+            model.put(dataName, dataObj);
+        }
+        
     }
 }

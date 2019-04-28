@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import web04.dao.MemberDao;
+import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
 @WebServlet("/member/add")
@@ -28,7 +28,7 @@ public class MemberAddServlet extends HttpServlet{
         
         try {
             ServletContext sc = this.getServletContext();
-            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+            MySqlMemberDao memberDao = (MySqlMemberDao)sc.getAttribute("memberDao");
             memberDao.insert((Member)request.getAttribute("member"));
             
             request.setAttribute("viewUrl", "redirect:list.do");

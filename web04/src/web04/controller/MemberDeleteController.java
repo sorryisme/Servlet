@@ -2,15 +2,27 @@ package web04.controller;
 
 import java.util.Map;
 
-import web04.dao.MemberDao;
+import web04.bind.DataBinding;
+import web04.dao.MySqlMemberDao;
+import web04.vo.Member;
 
-public class MemberDeleteController implements Controller{
+public class MemberDeleteController implements Controller, DataBinding{
+    MySqlMemberDao memberDao;
+    
+    public MemberDeleteController setMemberDao(MySqlMemberDao memberDao) {
+        this.memberDao = memberDao;
+        return this;
+    }
+    
+    @Override
+    public Object[] getDataBinders() {
+        return new Object[]{"no",Integer.class};
+    }
 
     @Override
     public String execute(Map<String, Object> model) throws Exception {
-        MemberDao memberDao = (MemberDao)model.get("memberDao");
-        memberDao.delete((int)model.get("no"));
-        
+        Member member = (Member)model.get("member");
+        memberDao.delete(member.getNo());
         return "redirect:list.do";
     }
 

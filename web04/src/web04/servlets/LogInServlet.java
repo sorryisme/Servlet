@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import web04.dao.MemberDao;
+import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
 @WebServlet("/auth/login")
@@ -29,7 +29,7 @@ public class LogInServlet extends HttpServlet{
         
         try {
             ServletContext sc = this.getServletContext();
-            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+            MySqlMemberDao memberDao = (MySqlMemberDao)sc.getAttribute("memberDao");
             Member member = memberDao.exist(request.getParameter("email"), request.getParameter("password"));
             
             if(member != null ) {

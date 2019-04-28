@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import web04.dao.MemberDao;
+import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
 @WebServlet( 
@@ -27,7 +27,7 @@ public class MemberUpdateServlet extends HttpServlet{
         response.setContentType("text/html; charset=UTF-8");
         try {
             ServletContext sc  = this.getServletContext();
-            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+            MySqlMemberDao memberDao = (MySqlMemberDao)sc.getAttribute("memberDao");
             
             request.setAttribute("member", memberDao.selectOne(Integer.parseInt(request.getParameter("no"))));
             request.setAttribute("viewUrl", "MemberUpdate.jsp");
@@ -42,7 +42,7 @@ public class MemberUpdateServlet extends HttpServlet{
         try {
             
             ServletContext sc = this.getServletContext();
-            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+            MySqlMemberDao memberDao = (MySqlMemberDao)sc.getAttribute("memberDao");
             
             Member member1  =(Member)request.getAttribute("member");
             System.out.println(member1.getEmail());

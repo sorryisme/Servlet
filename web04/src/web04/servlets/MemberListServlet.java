@@ -14,7 +14,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 
-import web04.dao.MemberDao;
+import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
 
@@ -29,7 +29,7 @@ public class MemberListServlet extends GenericServlet{
         
         try {
             ServletContext sc = this.getServletContext();
-            MemberDao memberDao = (MemberDao)sc.getAttribute("memberDao");
+            MySqlMemberDao memberDao = (MySqlMemberDao)sc.getAttribute("memberDao");
             
             request.setAttribute("members", memberDao.selectList());
             response.setContentType("text/html; charset=UTF-8");
