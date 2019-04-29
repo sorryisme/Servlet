@@ -4,10 +4,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import web04.annotation.Component;
 import web04.bind.DataBinding;
 import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
+@Component("/auth/login.do")
 public class MemberLoginController implements Controller,DataBinding{
     MySqlMemberDao memberDao;
     

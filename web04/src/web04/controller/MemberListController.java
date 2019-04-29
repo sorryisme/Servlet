@@ -2,8 +2,10 @@ package web04.controller;
 
 import java.util.Map;
 
+import web04.annotation.Component;
 import web04.dao.MySqlMemberDao;
 
+@Component("/member/list.do")
 public class MemberListController implements Controller {
     MySqlMemberDao memberDao;
     

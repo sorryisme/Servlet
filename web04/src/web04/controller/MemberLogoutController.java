@@ -4,9 +4,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import web04.dao.MemberDao;
+import web04.annotation.Component;
 import web04.dao.MySqlMemberDao;
 
+@Component("/auth/logout.do")
 public class MemberLogoutController implements Controller{
     MySqlMemberDao memberDao;
 

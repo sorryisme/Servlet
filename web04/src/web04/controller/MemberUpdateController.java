@@ -2,10 +2,12 @@ package web04.controller;
 
 import java.util.Map;
 
+import web04.annotation.Component;
 import web04.bind.DataBinding;
 import web04.dao.MySqlMemberDao;
 import web04.vo.Member;
 
+@Component("/member/update.do")
 public class MemberUpdateController implements Controller,DataBinding{
     MySqlMemberDao memberDao;
     

@@ -2,10 +2,11 @@ package web04.controller;
 
 import java.util.Map;
 
+import web04.annotation.Component;
 import web04.bind.DataBinding;
 import web04.dao.MySqlMemberDao;
-import web04.vo.Member;
 
+@Component("/member/delete.do")
 public class MemberDeleteController implements Controller, DataBinding{
     MySqlMemberDao memberDao;
     
