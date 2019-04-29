@@ -24,11 +24,13 @@ public class MemberLoginController implements Controller,DataBinding{
 
     @Override
     public String execute(Map<String, Object> model) throws Exception {
-        
-        if(model.get("email") == null) {
+        Member member = (Member) model.get("loginInfo");
+        // 데이터 바인딩 선언시 loginInfo로 이름을 지정했다.
+        // 바인딩 자체는 타입으로 자동으로 매칭하기 때문에 Member 타입으로 저장되었다.
+        if(member.getEmail()== null) {
             return "redirect:/web04/auth/LoginForm.jsp";
         } else {
-            Member member = memberDao.exist((String)model.get("email"), (String)model.get("password"));
+            member = memberDao.exist(member.getEmail(), member.getPassword());
             if(member != null) {
                 HttpSession session = (HttpSession)model.get("session");
                 session.setAttribute("member", member);

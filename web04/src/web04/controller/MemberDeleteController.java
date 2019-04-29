@@ -21,8 +21,7 @@ public class MemberDeleteController implements Controller, DataBinding{
 
     @Override
     public String execute(Map<String, Object> model) throws Exception {
-        Member member = (Member)model.get("member");
-        memberDao.delete(member.getNo());
+        memberDao.delete((int)model.get("no"));
         return "redirect:list.do";
     }
 

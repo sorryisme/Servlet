@@ -60,7 +60,7 @@ public class ServletRequestDataBinder {
         
         String propName =null;
         for(Method m : methods) {
-            if(m.getName().startsWith("set")) continue;
+            if(!m.getName().startsWith("set")) continue;
             propName = m.getName().substring(3);
             if(propName.toLowerCase().equals(name.toLowerCase())) {
                 return m;

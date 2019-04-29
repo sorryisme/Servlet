@@ -23,13 +23,14 @@ public class MemberUpdateController implements Controller,DataBinding{
     @Override
     public String execute(Map<String, Object> model) throws Exception {
         
-        if(model.get("member") == null) {
+        Member member =(Member)model.get("member"); 
+        if(member.getEmail()== null) {
             model.put("member", memberDao.selectOne((int)model.get("no")));
             
             return "MemberUpdate.jsp";
         } else {
             
-            Member member =(Member)model.get("member");
+            member =(Member)model.get("member");
             memberDao.updateMember(member);
             
             return "redirect:list.do";

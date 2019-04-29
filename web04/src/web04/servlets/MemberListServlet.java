@@ -21,6 +21,8 @@ import web04.vo.Member;
 @WebServlet("/member/list")
 public class MemberListServlet extends GenericServlet{
 
+    
+    
     @Override
     public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
         

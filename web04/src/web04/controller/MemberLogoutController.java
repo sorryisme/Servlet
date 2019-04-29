@@ -4,7 +4,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import web04.dao.MemberDao;
+import web04.dao.MySqlMemberDao;
+
 public class MemberLogoutController implements Controller{
+    MySqlMemberDao memberDao;
+
+    public MemberLogoutController getMemberDao(MySqlMemberDao memberDao) {
+        this.memberDao = memberDao;
+        return this;
+    }
 
     @Override
     public String execute(Map<String, Object> model) throws Exception {
