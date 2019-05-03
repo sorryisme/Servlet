@@ -39,6 +39,7 @@ public class ApplicationContext {
             objTable.put(key, clazz.newInstance());
         }
         
+        
     }
 
     public void prepareObjects(Properties props) throws Exception{

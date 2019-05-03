@@ -31,7 +31,6 @@ public class ContextLoaderListener implements ServletContextListener{
             applicationContext = new ApplicationContext(propertiesPath);
             
             
-            
         } catch (Throwable e) {
             e.printStackTrace();
         }
