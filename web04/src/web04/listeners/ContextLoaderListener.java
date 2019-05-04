@@ -26,10 +26,9 @@ public class ContextLoaderListener implements ServletContextListener{
     @Override
     public void contextInitialized(ServletContextEvent event) {
         try {
-            ServletContext sc = event.getServletContext();
-            String propertiesPath = sc.getRealPath(sc.getInitParameter("contextConfigLocation"));
-            applicationContext = new ApplicationContext(propertiesPath);
+            //applicationContext = new ApplicationContext();
             
+            String resource ="web/dao/mybatis-config.xml";
             
         } catch (Throwable e) {
             e.printStackTrace();

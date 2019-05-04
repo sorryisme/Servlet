@@ -20,7 +20,39 @@ public class ApplicationContext {
     public Object getBean(String key) {
         return objTable.get(key);
     }
-
+    public void addBean(String name, Object obj) {
+        objTable.put(name, obj);
+    }
+    
+    public void prepareObjectsByAnnotation(String basePackage) throws Exception{
+       Reflections reflector = new Reflections(basePackage);
+       Set<Class<?>> list = reflector.getTypesAnnotatedWith(Component.class);
+       String key = null;
+       for(Class<?> clazz : list) {
+           key = clazz.getAnnotation(Component.class).value();
+           objTable.put(key, clazz.newInstance());
+       }
+    }
+    
+    public void prepareObjectsByProperties(String propertiesPath) throws Exception{
+        Properties props = new Properties();
+        props.load(new FileReader(propertiesPath));
+        
+        Context ctx = new InitialContext();
+        String key = null;
+        String value = null;
+        
+        for(Object item : props.keySet()) {
+            key = (String)item;
+            value = props.getProperty(key);
+            if(key.startsWith("jndi.")) {
+                objTable.put(key, ctx.lookup(value));
+            } else {
+                objTable.put(key, Class.forName(value).newInstance());
+            }
+        }
+    }
+    
     public ApplicationContext(String propertiesPath) throws Exception{
         Properties props = new Properties();
         props.load(new FileReader(propertiesPath));
