@@ -1,19 +1,15 @@
 package web04.listeners;
 
-import javax.naming.InitialContext;
+import java.io.InputStream;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.sql.DataSource;
 
-import web04.controller.MemberAddController;
-import web04.controller.MemberDeleteController;
-import web04.controller.MemberListController;
-import web04.controller.MemberLoginController;
-import web04.controller.MemberLogoutController;
-import web04.controller.MemberUpdateController;
-import web04.dao.MySqlMemberDao;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 @WebListener
 public class ContextLoaderListener implements ServletContextListener{
@@ -26,9 +22,20 @@ public class ContextLoaderListener implements ServletContextListener{
     @Override
     public void contextInitialized(ServletContextEvent event) {
         try {
-            //applicationContext = new ApplicationContext();
+            applicationContext = new ApplicationContext();
             
-            String resource ="web/dao/mybatis-config.xml";
+            String resource ="web04/dao/mybatis-config.xml";
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+            
+            applicationContext.addBean("sqlSessionFactory",sqlSessionFactory);
+            
+            ServletContext sc = event.getServletContext();
+            String propertiesPath = sc.getRealPath(sc.getInitParameter("contextConfigLocation"));
+            
+            applicationContext.prepareObjectsByProperties(propertiesPath);
+            applicationContext.prepareObjectsByAnnotation("");
+            applicationContext.injectDependency();
             
         } catch (Throwable e) {
             e.printStackTrace();
